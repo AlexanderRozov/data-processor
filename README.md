@@ -4,7 +4,7 @@
 
 1. **data-generator** &mdash; .NET 8 worker, публикует случайные события в очередь RabbitMQ с заданным интервалом.
 2. **data-processor** &mdash; ASP.NET Core API. Потребляет очередь, сохраняет события в PostgreSQL (FluentMigrator+Dapper), предоставляет CRUD и health endpoint. MediatR используется для CQRS.
-3. **web-ui** &mdash; React + Vite SPA, отображающая таблицу событий и автоматически обновляющая данные с API. сделал для себя так как никогда не раболтал с таким только похожими чтобы себя проверить
+3. **web-ui** можно отрыть по адресу  http://localhost:5173 &mdash; React + Vite SPA, отображающая таблицу событий и автоматически обновляющая данные с API. сделал для себя так как никогда не работал с таким только похожими чтобы себя проверить
 
 ## Запуск через Docker Compose
 
@@ -34,7 +34,7 @@ docker compose up --build
 
 ## Frontend
 
-`src/web-ui` (React + TypeScript + Vite). Интерфейс показывает:
+`src/web-ui`  (React + TypeScript + Vite). Интерфейс показывает: можно отрыть по адресу 
 
 - количество событий, статистика (min/max/avg)
 - refresh контрол (по умолчанию 5 секунд)
@@ -55,5 +55,4 @@ docker compose up --build
 
 ## Тесты
 
-`dotnet test test-assignment.sln` – unit (MediatR handlers + Moq) и integration (WebApplicationFactory + Testcontainers для PostgreSQL/RabbitMQ). В текущей среде запуск может потребовать обновления `Microsoft.TestPlatform` (см. вывод `dotnet test`).
-
+`dotnet test test-assignment.sln` – unit (MediatR handlers + Moq) и integration (WebApplicationFactory + Testcontainers для PostgreSQL/RabbitMQ).
