@@ -6,6 +6,11 @@
 2. **data-processor** &mdash; ASP.NET Core API. Потребляет очередь, сохраняет события в PostgreSQL (FluentMigrator+Dapper), предоставляет CRUD и health endpoint. MediatR используется для CQRS.
 3. **web-ui** можно отрыть по адресу  http://localhost:5173 &mdash; React + Vite SPA, отображающая таблицу событий и автоматически обновляющая данные с API. сделал для себя так как никогда не работал с таким только похожими чтобы себя проверить
 
+   <img width="1920" height="1080" alt="Снимок экрана (162)" src="https://github.com/user-attachments/assets/f9128e3c-d5b8-4347-b749-5235c83de192" />
+   <img width="1920" height="1080" alt="Снимок экрана (161)" src="https://github.com/user-attachments/assets/66c2df78-7872-4738-bbd1-8110942d7bbc" />
+
+
+
 ## Запуск через Docker Compose
 
 ```bash
