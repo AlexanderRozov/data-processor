@@ -113,7 +113,7 @@ internal sealed class DataGeneratorService : BackgroundService
     }
 }
 
-internal sealed record GeneratedEvent(Guid Id, DateTime CreatedAt, int Value)
+internal record GeneratedEvent(Guid Id, DateTime CreatedAt, int Value)
 {
     public static GeneratedEvent CreateRandom()
     {
@@ -122,7 +122,7 @@ internal sealed record GeneratedEvent(Guid Id, DateTime CreatedAt, int Value)
     }
 }
 
-internal sealed class RabbitMqOptions
+internal class RabbitMqOptions
 {
     public string HostName { get; set; } = "localhost";
     public int Port { get; set; } = 5672;
@@ -131,7 +131,7 @@ internal sealed class RabbitMqOptions
     public string QueueName { get; set; } = "events";
 }
 
-internal sealed class GeneratorOptions
+internal class GeneratorOptions
 {
     public int Interval { get; set; } = 2000;
 }
