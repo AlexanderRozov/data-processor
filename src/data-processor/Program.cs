@@ -21,6 +21,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
 
+var allowedOrigins = builder.Configuration["FRONTEND_ORIGIN"]?
+    .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? new[] { "http://localhost:5173" };
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 
 builder.Services.Configure<DbOptions>(options =>
@@ -78,6 +92,7 @@ app.UseExceptionHandler(handler =>
         await problem.ExecuteAsync(context);
     });
 });
+app.UseCors("AllowFrontend");
 app.MapEventEndpoints();
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
