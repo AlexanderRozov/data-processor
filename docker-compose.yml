@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+ 
+  # PostgreSQL DB
+ 
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  
+  # RabbitMQ
+  
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # web UI
+    networks:
+      - app-net
+
+  
+  # Data Generator publishes events to RabbitMQ
+  
+  data-generator:
+    build:
+      context: ./src/data-generator
+      dockerfile: Dockerfile
+    container_name: data-generator
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_QUEUE: events
+      GENERATOR_INTERVAL_MS: 100
+    networks:
+      - app-net
+    restart: always
+    
+  # Data Processor consumes messages → writes to PostgreSQL also exposes REST API for CRUD
+
+  data-processor:
+    build:
+      context: ./src/data-processor
+      dockerfile: Dockerfile
+    container_name: data-processor
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      CONNECTION_STRING: Host=postgres;Port=5432;Database=app_db;Username=app;Password=app
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_QUEUE: events
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+    restart: always
+
+volumes:
+  postgres_data:
+
+networks:
+  app-net:
