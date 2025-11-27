@@ -67,8 +67,26 @@ services:
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
       RABBITMQ_QUEUE: events
+      FRONTEND_ORIGIN: http://localhost:5173
     ports:
       - "8080:8080"
+    networks:
+      - app-net
+    restart: always
+
+  # Web UI serving events dashboard
+
+  web-ui:
+    build:
+      context: ./src/web-ui
+      dockerfile: Dockerfile
+    container_name: web-ui
+    environment:
+      VITE_API_BASE_URL: http://data-processor:8080
+    ports:
+      - "5173:80"
+    depends_on:
+      - data-processor
     networks:
       - app-net
     restart: always
